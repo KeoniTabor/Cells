@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(200, 1fr);
+    grid-template-rows: repeat(200, 1fr);
+    border: solid black;
+    max-height: 90vh;
+    max-width: 90vh;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+}
+
+.space {
+   aspect-ratio: 1 / 1;
+}
+
+.hidden {
+    display: none;
+}

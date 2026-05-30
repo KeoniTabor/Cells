@@ -1,0 +1,5 @@
+make sure that when you check for neighbors, you also check for spaces that are outside bounds
+fix fertility rates
+make sure someone can give birth the same step they die on
+make sure if two cells want to give birth on the same spot, that is resolved.
+figure out how to make Standard Deviation lower witout just adding a 2
