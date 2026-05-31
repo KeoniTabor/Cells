@@ -4,8 +4,8 @@
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(200, 1fr);
-    grid-template-rows: repeat(200, 1fr);
+    grid-template-columns: repeat(100, 1fr);
+    grid-template-rows: repeat(100, 1fr);
     border: solid black;
     max-height: 90vh;
     max-width: 90vh;

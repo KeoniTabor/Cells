@@ -1,6 +1,8 @@
 let cells = []
 
-let gridSize = 200;
+let gridSize = 100;
+
+let mutationSpeed = 1;
 
 document.getElementById('startButton').addEventListener('click', start);
 
@@ -39,17 +41,22 @@ function buildGrid() {
 
 
 function createFirstCell() {
-    //get coords
-    const y = Math.floor(Math.random() * gridSize);
-    const x = Math.floor(Math.random() * gridSize);
-
-    //build it
-    birthCell(x, y);
+    const cell = {
+        'x': Math.floor(Math.random() * gridSize),
+        'y': Math.floor(Math.random() * gridSize),
+        'age': 0,
+        'fertility': 0,
+        'r': 127,
+        'g': 127,
+        'b': 127
+    }
+    cells.push(cell);
+    placeCell(cell);
 }
 
 function placeCell(cell) {
     const space = document.querySelector(`.space[data-row='${cell.y}'][data-col='${cell.x}']`)
-    space.style.backgroundColor = '#000000';
+    space.style.backgroundColor = `rgb(${cell.r}, ${cell.g}, ${cell.b})`;
 }
 
 
@@ -57,15 +64,6 @@ function step() {
     let deadCells = []
     let bornCellCoordinates = []
     cells.forEach(cell => {
-        //age cell
-        const ageIncrease = Math.random() * (100/24*2);
-        cell.age += ageIncrease;
-        
-        //kill cell if needed
-        if (cell.age >= 100) {
-            deadCells.push(cell);
-        }
-
         //reproduce
         //count neighbors
         let numberOfNeighbors = 0
@@ -126,22 +124,37 @@ function step() {
             chosenSpace = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
             bornCellCoordinates.push({
                 'x': chosenSpace.x,
-                'y': chosenSpace.y
+                'y': chosenSpace.y,
+                'parent': cell
             })
+        }
+
+        //age cell
+        //(random * 2 gets a number from 0-2 so the average is 1 but it can be + or - 1)
+        //multiply that by (max age / average steps), this is mean amount they will age
+        const ageIncrease = (Math.random() * 2 ) * (100/24);
+        cell.age += ageIncrease;
+        
+        //kill cell if needed
+        if (cell.age >= 100) {
+            deadCells.push(cell);
         }
 
     })
     deadCells.forEach(deadCell => killCell(deadCell));
-    bornCellCoordinates.forEach(bornCell => birthCell(bornCell.x, bornCell.y));
+    bornCellCoordinates.forEach(bornCell => birthCell(bornCell.parent, bornCell.x, bornCell.y));
 
 }
 
-function birthCell(x, y) {
+function birthCell(parent, x, y) {
     const cell = {
         'x': x,
         'y': y,
         'age': 0,
-        'fertility': 0
+        'fertility': 0,
+        'r': evolveColor(parent.r), 
+        'g': evolveColor(parent.g),
+        'b': evolveColor(parent.b)
     }
     cells.push(cell);
     placeCell(cell)
@@ -153,4 +166,16 @@ function killCell(cell) {
 
     cells = cells.filter(c => !(c.x === cell.x && c.y === cell.y));
 }
+
+function evolveColor(value) {
+    let newValue = value + (Math.floor(Math.random() * 3) - 1);
+    if (newValue < 0 ) {
+        newValue = 0;
+    }
+    if (newValue > 255) {
+        newValue = 255;
+    }
+    return newValue;
+}
+
 

@@ -1,3 +1,4 @@
+when you set the board size, make sure you automatically adjust the flexgrid
 make sure that when you check for neighbors, you also check for spaces that are outside bounds
 fix fertility rates
 make sure someone can give birth the same step they die on
