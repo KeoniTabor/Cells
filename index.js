@@ -22,25 +22,25 @@ startButton.addEventListener('click', () => {
     settings.secondsPerStep = document.getElementById('speedInput').value;
     
     //update UI (buttons)
-    initialSettingsContainer.classList.toggle('hidden');
-    pauseButton.classList.toggle('hidden');
-    startButton.classList.toggle('hidden');
+    initialSettingsContainer.classList.add('hidden');
+    pauseButton.classList.remove('hidden');
 
     //then get things started
     start();
 })
+
 document.getElementById('pauseButton').addEventListener('click', () => {
     //update UI buttons
-    pauseButton.classList.toggle('hidden');
-    resumeButton.classList.toggle('hidden');
+    pauseButton.classList.add('hidden');
+    resumeButton.classList.remove('hidden');
 
     //pause
     clearInterval(stepIntervalId);
 });
 document.getElementById('resumeButton').addEventListener('click', () => {
     //update UI buttons
-    resumeButton.classList.toggle('hidden');
-    pauseButton.classList.toggle('hidden');
+    resumeButton.classList.add('hidden');
+    pauseButton.classList.remove('hidden');
 
     //resume
     startStepInterval();
@@ -152,6 +152,7 @@ function createFirstCell() {
         'g': 127,
         'b': 127
     }
+    console.log(cell);
     cells.push(cell);
     placeCell(cell);
 }
