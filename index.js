@@ -1,33 +1,137 @@
+let settings = {
+    gridSize: 50,
+    mutationSpeed: 1,
+    secondsPerStep: 6
+}
+
 let cells = []
 
-let gridSize = 100;
+let stepIntervalId;
 
-let mutationSpeed = 1;
+//permanent DOM elements
+const initialSettingsContainer = document.getElementById('initialSettingsContainer');
+const setGridSizeButton = document.getElementById('setGridSizeButton');
+const startButton = document.getElementById('startButton');
+const pauseButton = document.getElementById('pauseButton');
+const resumeButton = document.getElementById('resumeButton');
+const grid = document.getElementById('grid')
 
-document.getElementById('startButton').addEventListener('click', start);
+setGridSizeButton.addEventListener('click', () => {
+    settings.gridSize = document.getElementById('gridSizeInput').value;
+})
+startButton.addEventListener('click', () => {
+    //save settings
+    settings.gridSize = document.getElementById('gridSizeInput').value;
+    settings.secondsPerStep = document.getElementById('speedInput').value;
+    
+    //update UI (buttons)
+    initialSettingsContainer.classList.toggle('hidden');
+    pauseButton.classList.toggle('hidden');
+    startButton.classList.toggle('hidden');
+
+    //then get things started
+    start();
+})
+document.getElementById('pauseButton').addEventListener('click', () => {
+    //update UI buttons
+    pauseButton.classList.toggle('hidden');
+    resumeButton.classList.toggle('hidden');
+
+    //pause
+    clearInterval(stepIntervalId);
+});
+document.getElementById('resumeButton').addEventListener('click', () => {
+    //update UI buttons
+    resumeButton.classList.toggle('hidden');
+    pauseButton.classList.toggle('hidden');
+
+    //resume
+    startStepInterval();
+});
+document.getElementById('saveButton').addEventListener('click', save);
+document.getElementById('uploadFile').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+        const data = JSON.parse(reader.result)
+        load(data)
+    }
+})
+
+
+function save() {
+    //pep the data
+    const data = {
+        settings: settings,
+        cells: cells
+    }
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+   
+    //get the date to dame the file
+    const date = new Date;
+    const month = date.getMonth();
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const hour = date.getHours();
+    const minute = date.getMinutes()
+
+    //download it
+    const a = document.createElement('a')
+    a.href = url;
+    a.download = `cells(${month}-${day}-${year}-${hour}${minute}).json`
+    a.click();
+
+    //clear
+    URL.revokeObjectURL(url);
+}
+
+function load(data) {
+    //set and update the settings
+    settings = data.settings;
+    initialSettingsContainer.classList.add('hidden');
+    console.log(settings);
+    //build the board
+    cells = data.cells
+    buildGrid();
+    cells.forEach(cell => {
+        placeCell(cell);
+        console.log('cells placed');
+    })
+    //allow to resume
+    resumeButton.classList.remove('hidden');
+    startButton.classList.add('hidden');
+}
 
 function start() {
     buildGrid();
     createFirstCell();
-    setInterval(() => {
-    step()
-    }, 1);
+    startStepInterval();
 
     //update dom
     document.getElementById('startButton').classList.add('hidden');
+    const menu = document.getElementById('menu');
     const progressButton = document.createElement('button');
     progressButton.textContent = 'progress';
     progressButton.onclick = () => step()
-    document.body.prepend(progressButton);
+    menu.appendChild(progressButton);
 
     //build array
 }
 
+function startStepInterval() {
+    stepIntervalId = setInterval(() => {
+    step();
+    console.log('stepped')
+    }, (settings.secondsPerStep * 1000) / cells.length);
+}
+
 //builds the spaces on the dom
 function buildGrid() {
-    const grid = document.getElementById('grid');
-    for (let row = 0; row < gridSize; row++) {
-        for (let col = 0; col < gridSize; col++) {
+    for (let row = 0; row < settings.gridSize; row++) {
+        for (let col = 0; col < settings.gridSize; col++) {
             const space = document.createElement('div');
             grid.appendChild(space);
             space.classList.add('space');
@@ -37,13 +141,14 @@ function buildGrid() {
             });
             }
         }
+    grid.style.gridTemplateColumns = `repeat(${settings.gridSize}, 1fr)`
     }
 
 
 function createFirstCell() {
     const cell = {
-        'x': Math.floor(Math.random() * gridSize),
-        'y': Math.floor(Math.random() * gridSize),
+        'x': Math.floor(Math.random() * settings.gridSize),
+        'y': Math.floor(Math.random() * settings.gridSize),
         'age': 0,
         'fertility': 0,
         'r': 127,
@@ -60,91 +165,82 @@ function placeCell(cell) {
 }
 
 
+
 function step() {
-    let deadCells = []
-    let bornCellCoordinates = []
-    cells.forEach(cell => {
-        //reproduce
-        //count neighbors
-        let numberOfNeighbors = 0
-        let possibleDirections = []
-        if (cells.some(c => c.x === cell.x + 1 && c.y === cell.y) || cell.x + 1 >= gridSize) {
-            numberOfNeighbors += 1;
-        }
-        else {
-            possibleDirections.push({
-                'x': cell.x + 1,
-                'y': cell.y
-            });
-        }
-        if (cells.some(c => c.x === cell.x - 1 && c.y === cell.y) || cell.x - 1 < 0) {
-            numberOfNeighbors += 1;
-        }
-        else {
-            possibleDirections.push({
-                'x': cell.x - 1,
-                'y': cell.y
-            });
-        }
-        if (cells.some(c => c.x === cell.x && c.y === cell.y + 1) || cell.y + 1 >= gridSize) {
-            numberOfNeighbors += 1;
-        }
-        else {
-            possibleDirections.push({
-                'x': cell.x,
-                'y': cell.y + 1
-            });
-        }
-        if (cells.some(c => c.x === cell.x && c.y === cell.y - 1) || cell.y - 1 < 0) {
-            numberOfNeighbors += 1;
-        }
-        else {
-            possibleDirections.push({
-                'x': cell.x,
-                'y': cell.y -1
-            });
-        }
+    const cell = cells[Math.floor((Math.random() * cells.length))]
+    //reproduce?
+    //count neighbors
+    let numberOfNeighbors = 0
+    let possibleSpaces = []
+    if (cells.some(c => c.x === cell.x + 1 && c.y === cell.y) || cell.x + 1 >= settings.gridSize) {
+        numberOfNeighbors += 1;
+    }
+    else {
+        possibleSpaces.push({
+            'x': cell.x + 1,
+            'y': cell.y
+        });
+    }
+    if (cells.some(c => c.x === cell.x - 1 && c.y === cell.y) || cell.x - 1 < 0) {
+        numberOfNeighbors += 1;
+    }
+    else {
+        possibleSpaces.push({
+            'x': cell.x - 1,
+            'y': cell.y
+        });
+    }
+    if (cells.some(c => c.x === cell.x && c.y === cell.y + 1) || cell.y + 1 >= settings.gridSize) {
+        numberOfNeighbors += 1;
+    }
+    else {
+        possibleSpaces.push({
+            'x': cell.x,
+            'y': cell.y + 1
+        });
+    }
+    if (cells.some(c => c.x === cell.x && c.y === cell.y - 1) || cell.y - 1 < 0) {
+        numberOfNeighbors += 1;
+    }
+    else {
+        possibleSpaces.push({
+            'x': cell.x,
+            'y': cell.y -1
+        });
+    }
 
-        //probability of reproduction in life
-        let pReproduce;
-        if (numberOfNeighbors === 4) {
-            pReproduce = 0;
-        }
-        else {
-            pReproduce = 25 * (2 ** (3 - numberOfNeighbors));
-        }
-        const fertilityIncrease = Math.random() * pReproduce * 4 / 24;
-        cell.fertility += fertilityIncrease
+    //set probability of reproduction in life
+    let pReproduce;
+    if (numberOfNeighbors === 4) {
+        pReproduce = 0;
+    }
+    else {
+        pReproduce = 25 * (2 ** (3 - numberOfNeighbors));
+    }
+    const fertilityIncrease = Math.random() * pReproduce * 4 / 24;
+    cell.fertility += fertilityIncrease
 
-        
-        //reproduce
-        let chosenSpace;
-         if (cell.fertility >= 100) {
-            cell.fertility -= 100;
-            chosenSpace = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
-            bornCellCoordinates.push({
-                'x': chosenSpace.x,
-                'y': chosenSpace.y,
-                'parent': cell
-            })
-        }
+    //reproduce
+    let chosenSpace;
+    if (cell.fertility >= 100) {
+        cell.fertility -= 100;
+        chosenSpace = possibleSpaces[Math.floor(Math.random() * possibleSpaces.length)]
+        birthCell(cell, chosenSpace.x, chosenSpace.y)
+    }
 
-        //age cell
-        //(random * 2 gets a number from 0-2 so the average is 1 but it can be + or - 1)
-        //multiply that by (max age / average steps), this is mean amount they will age
-        const ageIncrease = (Math.random() * 2 ) * (100/24);
-        cell.age += ageIncrease;
-        
-        //kill cell if needed
-        if (cell.age >= 100) {
-            deadCells.push(cell);
-        }
-
-    })
-    deadCells.forEach(deadCell => killCell(deadCell));
-    bornCellCoordinates.forEach(bornCell => birthCell(bornCell.parent, bornCell.x, bornCell.y));
-
+    //die?
+    //age cell
+    //(random * 2 gets a number from 0-2 so the average is 1 but it can be + or - 1)
+    //multiply that by (max age / average steps), this is mean amount they will age
+    const ageIncrease = (Math.random() * 2 ) * (100/24);
+    cell.age += ageIncrease;
+    
+    //kill cell if needed
+    if (cell.age >= 100) {
+        killCell(cell);
+    }
 }
+
 
 function birthCell(parent, x, y) {
     const cell = {

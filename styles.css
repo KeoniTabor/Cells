@@ -4,13 +4,12 @@
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(100, 1fr);
-    grid-template-rows: repeat(100, 1fr);
     border: solid black;
     max-height: 90vh;
     max-width: 90vh;
     aspect-ratio: 1 / 1;
     margin: 0 auto;
+    background-color: #808080;
 }
 
 .space {
