@@ -12,16 +12,22 @@
                 <li><a href="tests.html">Tests Page</a></li>
             </ul>
         </nav>
-        <div id="menu">
+        <div>
             <div id="initialSettingsContainer">
-                <input id='gridSizeInput' type='number'>
-                <input id='speedInput' type='number'>
+                <label>Grid Size:
+                    <input id='gridSizeInput' type='number'>
+                </label>
+                <label>Speed:
+                    <input id='speedInput' type='number'>
+                </label>
+                <button class='button' id="startButton">Start</button>
             </div>
-            <button id="startButton">Start</button>
-            <button id="pauseButton" class="hidden">Pause</button>
-            <button id="resumeButton" class="hidden">Resume</button>
-            <button id="saveButton">Save</button>
+            <div id='menu'>
+            <button class='button' id="pauseButton" class="hidden">Pause</button>
+            <button class='button' id="resumeButton" class="hidden">Resume</button>
+            <button class='button' id="saveButton">Save</button>
             <input type="file" id="uploadFile">
+            </div>
         </div>
         <div id="grid"></div>
         <script type="module" src="index.js"></script>    

@@ -16,9 +16,6 @@ const pauseButton = document.getElementById('pauseButton');
 const resumeButton = document.getElementById('resumeButton');
 const grid = document.getElementById('grid')
 
-setGridSizeButton.addEventListener('click', () => {
-    settings.gridSize = document.getElementById('gridSizeInput').value;
-})
 startButton.addEventListener('click', () => {
     //save settings
     settings.gridSize = document.getElementById('gridSizeInput').value;
