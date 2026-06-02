@@ -23,8 +23,8 @@
 #grid {
     display: grid;
     border: solid black;
-    height: min(90vh, 90dvh);
-    width: min(90dvh, 90vh);
+    height: min(90vh, 90dvh, 90%);
+    width: min(90dvh, 90vh, 90%);
     aspect-ratio: 1 / 1;
     margin: 0 auto;
     background-color: #808080;
