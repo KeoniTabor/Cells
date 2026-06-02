@@ -7,6 +7,7 @@ let settings = {
 let cells = []
 
 let stepIntervalId;
+let stepsPerInterval;
 
 //permanent DOM elements
 const initialSettingsContainer = document.getElementById('initialSettingsContainer');
@@ -125,10 +126,21 @@ function start() {
 
 function startStepInterval() {
     stepIntervalId = setInterval(() => {
-    step();
-    console.log('stepped')
-    }, (settings.secondsPerStep * 1000) / cells.length);
+        let stepsPerInterval;
+        if (((settings.secondsPerStep * 1000) / cells.length) < 1) {
+            stepsPerInterval = 1 / ((settings.secondsPerStep * 1000) / cells.length)
+        }
+        else {
+            stepsPerInterval = 1
+        }
+
+        for (let i = 0; i <= stepsPerInterval; i++ ) {
+        step();
+        }
+        console.log(stepsPerInterval);
+    },(settings.secondsPerStep * 1000) / cells.length);
 }
+ 
 
 //builds the spaces on the dom
 function buildGrid() {
