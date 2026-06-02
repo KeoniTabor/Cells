@@ -1,5 +1,10 @@
 * {
     box-sizing: border-box;
+    color: #808080;
+}
+
+body {
+    background-color: black;
 }
 
 .button {
