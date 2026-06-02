@@ -144,6 +144,7 @@ function buildGrid() {
             }
         }
     grid.style.gridTemplateColumns = `repeat(${settings.gridSize}, 1fr)`
+    grid.style.gridTemplateRows = `repeat(${settings.gridSize}, 1fr)`
     }
 
 
