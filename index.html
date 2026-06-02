@@ -14,17 +14,20 @@
         </nav>
         <div>
             <div class='initialSettingsContainer' id="initialSettingsContainer">
-                <label>Grid Size:
-                    <input id='gridSizeInput' type='number'>
+                <label>
+                    <input id='speedInput' type='number'>
                 </label>
                 <label>Speed:
-                    <input id='speedInput' type='number'>
+                    <input id='speedInput' type='number' value="0.001">
+                </label>
+                <label>Grid Size:
+                    <input id="gridSizeInput" type="number" value="100">
                 </label>
                 <button class='button' id="startButton">Start</button>
             </div>
             <div id='menu'>
-            <button class='button' id="pauseButton" class="hidden">Pause</button>
-            <button class='button' id="resumeButton" class="hidden">Resume</button>
+            <button class='button hidden' id="pauseButton">Pause</button>
+            <button class='button hidden' id="resumeButton">Resume</button>
             <button class='button' id="saveButton">Save</button>
             <input type="file" id="uploadFile">
             </div>

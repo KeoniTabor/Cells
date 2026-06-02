@@ -1,5 +1,5 @@
 let settings = {
-    gridSize: 50,
+    gridSize: 20,
     mutationSpeed: 1,
     secondsPerStep: 6
 }
@@ -10,7 +10,12 @@ let stepIntervalId;
 
 //permanent DOM elements
 const initialSettingsContainer = document.getElementById('initialSettingsContainer');
-const setGridSizeButton = document.getElementById('setGridSizeButton');
+const speedInput = document.getElementById('speedInput');
+speedInput.disabled = false;
+speedInput.readOnly = false;
+const gridSizeInput = document.getElementById('gridSizeInput');
+gridSizeInput.disabled = false;
+gridSizeInput.readOnly = false;
 const startButton = document.getElementById('startButton');
 const pauseButton = document.getElementById('pauseButton');
 const resumeButton = document.getElementById('resumeButton');
@@ -160,6 +165,10 @@ function createFirstCell() {
 function placeCell(cell) {
     const space = document.querySelector(`.space[data-row='${cell.y}'][data-col='${cell.x}']`)
     space.style.backgroundColor = `rgb(${cell.r}, ${cell.g}, ${cell.b})`;
+    space.style.borderWidth = '1%';
+    space.style.borderStyle = 'solid';
+    space.style.borderColor = `rgb(${cell.r - 1}, ${cell.g - 1}, ${cell.b - 1})`;
+
 }
 
 
@@ -257,6 +266,7 @@ function birthCell(parent, x, y) {
 function killCell(cell) {
     const space = document.querySelector(`.space[data-row='${cell.y}'][data-col='${cell.x}']`);
     space.style.backgroundColor = '';
+    space.style.border = '';
 
     cells = cells.filter(c => !(c.x === cell.x && c.y === cell.y));
 }
