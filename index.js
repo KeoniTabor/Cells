@@ -166,9 +166,9 @@ function createFirstCell() {
 function placeCell(cell) {
     const space = document.querySelector(`.space[data-row='${cell.y}'][data-col='${cell.x}']`)
     space.style.backgroundColor = `rgb(${cell.r}, ${cell.g}, ${cell.b})`;
-    space.style.borderWidth = '1%';
+    space.style.borderWidth = '1px';
     space.style.borderStyle = 'solid';
-    space.style.borderColor = `rgb(${cell.r - 2}, ${cell.g - 2}, ${cell.b - 2})`;
+    space.style.borderColor = `rgb(${cell.r - 1}, ${cell.g - 1}, ${cell.b - 1})`;
 
 }
 
