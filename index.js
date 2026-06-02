@@ -145,17 +145,6 @@ function buildGrid() {
         }
     grid.style.gridTemplateColumns = `repeat(${settings.gridSize}, 1fr)`
     grid.style.gridTemplateRows = `repeat(${settings.gridSize}, 1fr)`
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    if (width >= height) {
-        grid.style.height = .9 * height;
-    }
-
-    else {
-        grid.style.width = .9 * width;
-    }
-
 }
 
 
