@@ -179,7 +179,7 @@ function placeCell(cell) {
     space.style.backgroundColor = `rgb(${cell.r}, ${cell.g}, ${cell.b})`;
     space.style.borderWidth = '1%';
     space.style.borderStyle = 'solid';
-    space.style.borderColor = `rgb(${cell.r - 1}, ${cell.g - 1}, ${cell.b - 1})`;
+    space.style.borderColor = `rgb(${cell.r - 2}, ${cell.g - 2}, ${cell.b - 2})`;
 
 }
 
