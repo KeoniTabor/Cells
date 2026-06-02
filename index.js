@@ -149,11 +149,11 @@ function buildGrid() {
     const height = window.innerHeight;
 
     if (width >= height) {
-        grid.height = .9 * height;
+        grid.style.height = .9 * height;
     }
 
     else {
-        grid.width = .9 * width;
+        grid.style.width = .9 * width;
     }
 
 }
